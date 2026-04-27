@@ -13,19 +13,16 @@ export default function SignupPage() {
     const [isChecking, setIsChecking] = useState(true);
 
     useEffect(() => {
-        // Determine if the user is already authenticated
         const session = storage.getSession();
-
         if (session) {
-            // Direct redirect to dashboard; 'replace' removes signup from history
             router.replace('/dashboard');
         } else {
-            // No session, allow the user to see the signup form
             setIsChecking(false);
         }
     }, [router]);
 
-    // Prevent "Flash of Unstyled Form" by showing the splash during the check
+    
+   
     if (isChecking) {
         return <SplashScreen />;
     }
