@@ -58,7 +58,7 @@ export const storage = {
         const existingIndex = allHabits.findIndex(h => h.id === habit.id);
 
         if (existingIndex > -1) {
-            // If it exists, we update it (Edit Habit - Requirement 1 2)
+            // If it exists, we update it.
             allHabits[existingIndex] = habit;
         } else {
             // If not, we add it (Create Habit)
