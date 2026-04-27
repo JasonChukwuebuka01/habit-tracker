@@ -1,9 +1,17 @@
-import React from 'react'
+import ProtectedRoute from '@/components/shared/ProtectedRoute';
 
-const DashboardPage = () => {
+
+export default function DashboardLayout({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
     return (
-        <div>DashboardPage</div>
-    )
+        <ProtectedRoute>
+            <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
+                {/* You can add a Sidebar or Navbar here later */}
+                {children}
+            </div>
+        </ProtectedRoute>
+    );
 }
-
-export default DashboardPage
