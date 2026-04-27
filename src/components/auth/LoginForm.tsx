@@ -22,7 +22,6 @@ export default function LoginForm() {
         if (result.success) {
             router.push('/dashboard');
         } else {
-            // Requirement 11: Must show this exact message
             setError(result.error || 'Invalid email or password');
             setIsSubmitting(false);
         }
@@ -47,7 +46,7 @@ export default function LoginForm() {
             </div>
 
             <div className="flex flex-col gap-2">
-                <label htmlFor="login-password"  className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                <label htmlFor="login-password" className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                     Password
                 </label>
                 <input
@@ -62,14 +61,16 @@ export default function LoginForm() {
                 />
             </div>
 
-            {error && (
-                <div
-                    role="alert"
-                    className="p-3 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-800"
-                >
-                    {error}
-                </div>
-            )}
+            {
+                error && (
+                    <div
+                        role="alert"
+                        className="p-3 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-800"
+                    >
+                        {error}
+                    </div>
+                )
+            }
 
             <button
                 type="submit"

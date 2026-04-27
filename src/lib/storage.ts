@@ -1,15 +1,15 @@
 import { User, Session } from '../types/auth';
 import { Habit } from '../types/habits';
+import { STORAGE_KEYS } from './constants';
 
 
-
-const USERS_KEY = 'habit-tracker-users';
-const SESSION_KEY = 'habit-tracker-session';
-const HABITS_KEY = 'habit-tracker-habits';
+const USERS_KEY = STORAGE_KEYS.USERS;
+const SESSION_KEY = STORAGE_KEYS.SESSION;
+const HABITS_KEY = STORAGE_KEYS.HABITS;
 
 
 export const storage = {
-    //USER DATA 
+
     getUsers(): User[] {
         if (typeof window === 'undefined') return [];
         const data = localStorage.getItem(USERS_KEY);

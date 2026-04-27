@@ -11,6 +11,8 @@ export default function SignupForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
+
+
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
@@ -26,6 +28,10 @@ export default function SignupForm() {
         }
     };
 
+
+
+
+    
     return (
         <form onSubmit={handleSignup} className="flex flex-col gap-5 w-full">
             <div className="flex flex-col gap-2">
@@ -60,14 +66,16 @@ export default function SignupForm() {
                 />
             </div>
 
-            {error && (
-                <div
-                    role="alert"
-                    className="p-3 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-800"
-                >
-                    {error}
-                </div>
-            )}
+            {
+                error && (
+                    <div
+                        role="alert"
+                        className="p-3 text-sm font-medium text-red-600 bg-red-50 dark:bg-red-900/20 rounded-md border border-red-200 dark:border-red-800"
+                    >
+                        {error}
+                    </div>
+                )
+            }
 
             <button
                 type="submit"

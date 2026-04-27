@@ -3,6 +3,7 @@ import SignupForm from '@/components/auth/SignupForm';
 import { APP_NAME } from '@/lib/constants';
 
 export default function SignupPage() {
+    
     return (
         <main className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-6">
             <div className="w-full max-w-[400px] bg-white dark:bg-slate-900 rounded-2xl shadow-xl p-8 border border-slate-200 dark:border-slate-800">
