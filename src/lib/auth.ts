@@ -7,7 +7,7 @@ import { User, Session } from '../types/auth';
  */
 export function registerUser(email: string, password: string): { success: boolean; error?: string } {
   const users = storage.getUsers();
-  
+
   // Check if a user with this email already exists (Requirement 11)
   const existingUser = users.find((user: User) => user.email === email);
   if (existingUser) {
@@ -16,7 +16,7 @@ export function registerUser(email: string, password: string): { success: boolea
 
   // Create the new user object
   const newUser: User = {
-    id: crypto.randomUUID(), 
+    id: crypto.randomUUID(),
     email,
     password,
     createdAt: new Date().toISOString(),
