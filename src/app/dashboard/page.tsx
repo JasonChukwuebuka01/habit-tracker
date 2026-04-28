@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { storage } from '@/lib/storage';
 import { Habit } from '@/types/habits';
 import HabitForm from '@/components/habits/HabitForm';
-import HabitCard from '@/components/habits/HabitCard';
+import HabitList from '@/components/habits/HabitList'; // Imported HabitList
 
 export default function DashboardPage() {
     const [habits, setHabits] = useState<Habit[]>([]);
@@ -12,8 +12,6 @@ export default function DashboardPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedHabit, setSelectedHabit] = useState<Habit | undefined>(undefined);
     const [userId, setUserId] = useState<string | null>(null);
-
-
 
     // 1. Load data from storage
     const loadHabits = useCallback(() => {
@@ -26,24 +24,15 @@ export default function DashboardPage() {
         setIsLoading(false);
     }, []);
 
-
-
     useEffect(() => {
         loadHabits();
     }, [loadHabits]);
-
-
-
-
-
 
     // 2. Handle Completion Toggle (The Handshake)
     const handleToggleComplete = (updatedHabit: Habit) => {
         storage.saveHabit(updatedHabit); // Save the new version to LocalStorage
         loadHabits(); // Refresh the UI
     };
-
-
 
     // Handle Deletion
     const handleDelete = (id: string) => {
@@ -53,15 +42,11 @@ export default function DashboardPage() {
         }
     };
 
-
-
     // 4. Handle Edit (Open form with existing data)
     const handleEdit = (habit: Habit) => {
         setSelectedHabit(habit);
         setIsFormOpen(true);
     };
-
-
 
     // 5. Handle Close Form (Reset selection)
     const handleCloseForm = () => {
@@ -69,14 +54,10 @@ export default function DashboardPage() {
         setSelectedHabit(undefined);
     };
 
-
     const handleOpenForm = () => {
         setSelectedHabit(undefined); // Ensure no habit is selected for a fresh form
         setIsFormOpen(true);
     };
-
-
-
 
     if (isLoading) {
         return (
@@ -84,9 +65,7 @@ export default function DashboardPage() {
                 <div className="h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
             </div>
         );
-    };
-
-
+    }
 
     return (
         <div
@@ -100,72 +79,57 @@ export default function DashboardPage() {
                     <p className="text-slate-500 dark:text-slate-400">Small steps lead to big changes.</p>
                 </div>
 
-                {
-                    habits.length > 0 && (
-                        <button
-                            onClick={handleOpenForm}
-                            className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
-                        >
-                            <span>+</span> New Habit
-                        </button>
-                    )
-                }
+                {habits.length > 0 && (
+                    <button
+                        onClick={handleOpenForm}
+                        className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
+                    >
+                        <span>+</span> New Habit
+                    </button>
+                )}
             </header>
 
             {/* Main Content */}
-            {
-                habits.length === 0 ?
-                    (
-                        <section data-testid="empty-state" className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-white dark:bg-slate-900/50">
-                            <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
-                                <span className="text-2xl">🌱</span>
-                            </div>
-                            <h2 className="text-xl font-bold text-slate-900 dark:text-white">No habits yet</h2>
-                            <button
-                                onClick={handleOpenForm}
-                                className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
-                            >
-                                Create Your First Habit
-                            </button>
-                        </section>
-                    ) :
-                    (
-                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                            {habits.map((habit) => (
-                                <HabitCard
-                                    key={habit.id}
-                                    habit={habit}
-                                    onEdit={handleEdit}
-                                    onDelete={handleDelete}
-                                    onUpdate={handleToggleComplete}
-                                />
-                            ))}
-                        </div>
-                    )
-            }
-
+            {habits.length === 0 ? (
+                <section data-testid="empty-state" className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-3xl bg-white dark:bg-slate-900/50">
+                    <div className="w-16 h-16 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center mb-4">
+                        <span className="text-2xl">🌱</span>
+                    </div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white">No habits yet</h2>
+                    <button
+                        onClick={handleOpenForm}
+                        className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
+                    >
+                        Create Your First Habit
+                    </button>
+                </section>
+            ) : (
+                /* Updated to use HabitList */
+                <HabitList
+                    habits={habits}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onUpdate={handleToggleComplete}
+                />
+            )}
 
             {/* Mobile Floating Action Button */}
-            {
-                habits.length > 0 && (
-                    <button
-
-                        onClick={() => handleOpenForm()}
-                        className="md:hidden fixed bottom-8 right-8 w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl font-bold active:scale-90 transition-transform z-40"
-                        aria-label="Add Habit"
-                    >
-                        +
-                    </button>
-                )
-            }
-
+            {habits.length > 0 && (
+                <button
+                    onClick={handleOpenForm}
+                    className="md:hidden fixed bottom-6 right-8 w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl font-bold active:scale-90 transition-transform z-40"
+                    aria-label="Add Habit"
+                >
+                    +
+                </button>
+            )}
 
             {/* Habit Form Slide-over */}
             {userId && (
                 <HabitForm
                     isOpen={isFormOpen}
                     userId={userId}
-                    initialData={selectedHabit} // Pass data if we are editing
+                    initialData={selectedHabit}
                     onClose={handleCloseForm}
                     onSuccess={loadHabits}
                 />
