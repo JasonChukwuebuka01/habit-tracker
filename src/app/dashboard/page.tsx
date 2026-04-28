@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { storage } from '@/lib/storage';
 import { Habit } from '@/types/habits';
 import HabitForm from '@/components/habits/HabitForm';
@@ -12,8 +12,11 @@ export default function DashboardPage() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [selectedHabit, setSelectedHabit] = useState<Habit | undefined>(undefined);
     const [userId, setUserId] = useState<string | null>(null);
+    const listRef = useRef<HTMLDivElement>(null);
 
-    // 1. Load data from storage
+
+
+    // Load data from storage
     const loadHabits = useCallback(() => {
         const session = storage.getSession();
         if (session) {
@@ -23,6 +26,8 @@ export default function DashboardPage() {
         }
         setIsLoading(false);
     }, []);
+
+
 
     useEffect(() => {
         loadHabits();
@@ -34,7 +39,9 @@ export default function DashboardPage() {
         loadHabits(); // Refresh the UI
     };
 
-    // Handle Deletion
+    
+
+
     const handleDelete = (id: string) => {
         if (confirm('Are you sure you want to delete this habit?')) {
             storage.deleteHabit(id);
@@ -42,22 +49,25 @@ export default function DashboardPage() {
         }
     };
 
-    // 4. Handle Edit (Open form with existing data)
+
+
     const handleEdit = (habit: Habit) => {
         setSelectedHabit(habit);
         setIsFormOpen(true);
     };
 
-    // 5. Handle Close Form (Reset selection)
+ 
+
     const handleCloseForm = () => {
         setIsFormOpen(false);
         setSelectedHabit(undefined);
     };
 
     const handleOpenForm = () => {
-        setSelectedHabit(undefined); // Ensure no habit is selected for a fresh form
+        setSelectedHabit(undefined); 
         setIsFormOpen(true);
     };
+
 
     if (isLoading) {
         return (
@@ -104,8 +114,8 @@ export default function DashboardPage() {
                     </button>
                 </section>
             ) : (
-                /* Updated to use HabitList */
                 <HabitList
+                    ref={listRef}
                     habits={habits}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
@@ -132,6 +142,7 @@ export default function DashboardPage() {
             {/* Habit Form Slide-over */}
             {userId && (
                 <HabitForm
+                    listRef={listRef}
                     isOpen={isFormOpen}
                     userId={userId}
                     initialData={selectedHabit}

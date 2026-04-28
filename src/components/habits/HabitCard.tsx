@@ -15,7 +15,9 @@ interface HabitCardProps {
     onEdit: (habit: Habit) => void;
     onDelete: (id: string) => void;
     onUpdate: (updatedHabit: Habit) => void; 
-}
+};
+
+
 
 export default function HabitCard({ habit, onEdit, onDelete, onUpdate }: HabitCardProps) {
 
@@ -33,10 +35,9 @@ export default function HabitCard({ habit, onEdit, onDelete, onUpdate }: HabitCa
 
 
 
-    
+
 
     const handleToggle = () => {
-        // Using your toggleHabitCompletion utility
         const updatedHabit = toggleHabitCompletion(habit, today);
         onUpdate(updatedHabit);
     };

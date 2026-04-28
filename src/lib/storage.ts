@@ -62,7 +62,7 @@ export const storage = {
             allHabits[existingIndex] = habit;
         } else {
             // If not, we add it (Create Habit)
-            allHabits.push(habit);
+            allHabits.unshift(habit);
         }
 
         localStorage.setItem(HABITS_KEY, JSON.stringify(allHabits));

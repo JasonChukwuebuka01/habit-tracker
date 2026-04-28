@@ -6,28 +6,33 @@ import { Habit } from '@/types/habits';
 import { validateHabitName } from '@/lib/validators';
 
 interface HabitFormProps {
-    isOpen: boolean; // Control visibility via prop
+    isOpen: boolean;
     onClose: () => void;
     onSuccess: () => void;
     userId: string;
     initialData?: Habit;
+    // FIXED: Changed to RefObject to support .current access
+    listRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialData }: HabitFormProps) {
+export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialData, listRef }: HabitFormProps) {
     const [name, setName] = useState(initialData?.name || '');
     const [description, setDescription] = useState(initialData?.description || '');
     const [error, setError] = useState<string | null>(null);
 
     const panelRef = useRef<HTMLDivElement>(null);
 
-
-
-    
     // Accessibility & Focus Management
     useEffect(() => {
         if (!isOpen) return;
 
         setName(initialData?.name || '');
+        setDescription(initialData?.description || '');
+
+        if(name.length > 0 && name.length < 60) {
+            setError(null);
+            document.getElementById('habit-name')?.style.setProperty('border', 'none');
+        }
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
@@ -57,8 +62,7 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
             document.removeEventListener('keydown', handleKeyDown);
             clearTimeout(timer);
         };
-    }, [isOpen, onClose]);
-
+    }, [isOpen, onClose, initialData]);
 
 
 
@@ -70,11 +74,10 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
 
         if (!validation.valid) {
             setError(validation.error);
+            document.getElementById('habit-name')?.focus();
+            document.getElementById('habit-name')?.style.setProperty('border', '2px solid #ef4444');
             return;
-        };
-
-
-       
+        }
 
         try {
             const habitData: Habit = {
@@ -90,9 +93,25 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
             storage.saveHabit(habitData);
             onSuccess();
             onClose();
+
+            if (!initialData) {
+                // Scroll the HabitList container (Desktop)
+                if (listRef?.current) {
+                    listRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+                // Scroll the window (Mobile)
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 100);
+            }
         } catch (err) {
             setError('Failed to save habit.');
         }
+    };
+
+    const handleNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setName(e.target.value);
+        setError(null);
     };
 
     return (
@@ -137,7 +156,7 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
                             data-testid="habit-name-input"
                             type="text"
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={handleNameInputChange}
                             className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/30 focus:ring-2 focus:ring-blue-600 outline-none transition-all"
                         />
                     </div>
