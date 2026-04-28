@@ -117,10 +117,23 @@ export default function DashboardPage() {
             {habits.length > 0 && (
                 <button
                     onClick={handleOpenForm}
-                    className="md:hidden fixed bottom-6 right-8 w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center text-2xl font-bold active:scale-90 transition-transform z-40"
+                    className="md:hidden fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full flex items-center justify-center text-3xl font-light
+                          z-40 transition-all duration-300
+        
+        /* High-Fidelity Shadows */
+        shadow-[0_8px_30px_rgb(37,99,235,0.4)] 
+        hover:shadow-[0_8px_40px_rgb(37,99,235,0.6)]
+        
+        /* Interaction & Animation */
+        active:scale-90 hover:-translate-y-1
+        animate-in zoom-in slide-in-from-bottom-10 duration-500
+    "
                     aria-label="Add Habit"
                 >
-                    +
+                    {/* Pulsing ring effect */}
+                    <span className="absolute inset-0 rounded-full bg-blue-400 animate-ping opacity-20" />
+
+                    <span className="relative">+</span>
                 </button>
             )}
 
