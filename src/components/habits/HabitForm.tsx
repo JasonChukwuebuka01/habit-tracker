@@ -28,10 +28,10 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
         setName(initialData?.name || '');
         setDescription(initialData?.description || '');
 
-        if(name.length > 0 && name.length < 60) {
+        if (name.length > 0 && name.length < 60) {
             setError(null);
             document.getElementById('habit-name')?.style.setProperty('border', 'none');
-        }
+        };
 
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') onClose();
@@ -65,7 +65,7 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
 
 
 
-    
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -110,9 +110,22 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
         }
     };
 
+
+
+
+
     const handleNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setName(e.target.value);
         setError(null);
+    };
+
+
+
+
+    const handleCloseForm = () => {
+        setError(null);
+        document.getElementById('habit-name')?.style.setProperty('border', 'none');
+        onClose();
     };
 
     return (
@@ -124,7 +137,7 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
             <div
                 className={`absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'
                     }`}
-                onClick={onClose}
+                onClick={handleCloseForm}
             />
 
             {/* Side Panel */}
@@ -188,7 +201,7 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
                     {error && <p className="text-sm text-red-500 font-medium">{error}</p>}
 
                     <div className="mt-auto pt-6 flex gap-3">
-                        <button type="button" onClick={onClose} className="flex-1 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+                        <button type="button" onClick={handleCloseForm} className="flex-1 py-4 font-bold text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
                             Cancel
                         </button>
                         <button
