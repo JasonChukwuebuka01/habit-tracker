@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { storage } from '@/lib/storage';
 import { Habit } from '@/types/habits';
+import { validateHabitName } from '@/lib/validators';
 
 interface HabitFormProps {
     isOpen: boolean; // Control visibility via prop
@@ -18,7 +19,10 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
     const [error, setError] = useState<string | null>(null);
 
     const panelRef = useRef<HTMLDivElement>(null);
-    console.log('HabitForm rendered with initialData:', initialData);
+
+
+
+    
     // Accessibility & Focus Management
     useEffect(() => {
         if (!isOpen) return;
@@ -56,22 +60,27 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
     }, [isOpen, onClose]);
 
 
-    
+
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
-        if (!name.trim()) {
-            setError('Habit name is required');
+        const validation = validateHabitName(name);
+
+        if (!validation.valid) {
+            setError(validation.error);
             return;
-        }
+        };
+
+
+       
 
         try {
             const habitData: Habit = {
                 id: initialData?.id || crypto.randomUUID(),
                 userId: userId,
-                name: name.trim(),
+                name: validation.value,
                 description: description.trim(),
                 frequency: 'daily',
                 createdAt: initialData?.createdAt || new Date().toISOString(),
