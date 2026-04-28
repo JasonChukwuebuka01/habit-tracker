@@ -9,9 +9,8 @@ interface HabitListProps {
     onEdit: (habit: Habit) => void;
     onDelete: (id: string) => void;
     onUpdate: (updatedHabit: Habit) => void;
-}
+};
 
-// We wrap the component in forwardRef to allow the parent to scroll this specific div
 const HabitList = forwardRef<HTMLDivElement, HabitListProps>(
     ({ habits, onEdit, onDelete, onUpdate }, ref) => {
         return (
@@ -19,15 +18,19 @@ const HabitList = forwardRef<HTMLDivElement, HabitListProps>(
                 ref={ref}
                 data-testid="habit-list"
                 className="
-                    grid gap-6 md:grid-cols-2 lg:grid-cols-3 
+                    /* Grid Layout */
+                    grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 
                     animate-in fade-in duration-500 
-                    /* Mobile: Normal scrolling */
-                    max-h-none overflow-visible pr-0 
-                    /* Desktop: Internal scrolling area */
-                    md:max-h-[calc(100vh-250px)] md:overflow-y-auto 
-                    md:pr-4 md:-mr-4 
-                    /* Bottom spacing for FAB and layout breathing room */
-                    pb-20 md:pb-12
+                    
+                    /* Mobile: Clean, natural flow */
+                    max-h-none overflow-visible w-full px-1
+                    
+                    /* Desktop: Fixed scroll area */
+                    md:max-h-[calc(100vh-260px)] md:overflow-y-auto 
+                    md:pr-4 md:-mr-2
+                    
+                    /* Bottom Spacing to clear the Mobile Add Button */
+                    pb-32 md:pb-12
                 "
             >
                 {habits.map((habit) => (
@@ -44,7 +47,6 @@ const HabitList = forwardRef<HTMLDivElement, HabitListProps>(
     }
 );
 
-// Setting display name for better debugging in React DevTools
 HabitList.displayName = 'HabitList';
 
 export default HabitList;

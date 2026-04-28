@@ -11,7 +11,6 @@ interface HabitFormProps {
     onSuccess: () => void;
     userId: string;
     initialData?: Habit;
-    // FIXED: Changed to RefObject to support .current access
     listRef?: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -65,6 +64,8 @@ export default function HabitForm({ isOpen, onClose, onSuccess, userId, initialD
     }, [isOpen, onClose, initialData]);
 
 
+
+    
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
