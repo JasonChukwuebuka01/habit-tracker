@@ -39,14 +39,12 @@ export default function DashboardPage() {
         loadHabits(); // Refresh the UI
     };
 
-    
+
 
 
     const handleDelete = (id: string) => {
-        if (confirm('Are you sure you want to delete this habit?')) {
-            storage.deleteHabit(id);
-            loadHabits();
-        }
+        storage.deleteHabit(id);
+        loadHabits();
     };
 
 
@@ -56,15 +54,17 @@ export default function DashboardPage() {
         setIsFormOpen(true);
     };
 
- 
+
 
     const handleCloseForm = () => {
         setIsFormOpen(false);
         setSelectedHabit(undefined);
     };
 
+
+
     const handleOpenForm = () => {
-        setSelectedHabit(undefined); 
+        setSelectedHabit(undefined);
         setIsFormOpen(true);
     };
 
@@ -85,8 +85,23 @@ export default function DashboardPage() {
             {/* Header Section */}
             <header className="flex items-center justify-between">
                 <div className="flex flex-col gap-1">
-                    <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white">My Habits</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Small steps lead to big changes.</p>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                            My Habits
+                        </h1>
+                        {/* Total Habits Badge */}
+                        {habits.length > 0 && (
+                            <span className="flex items-center justify-center px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-bold border border-slate-200 dark:border-slate-700 animate-in zoom-in duration-300">
+                                {habits.length}
+                            </span>
+                        )}
+                    </div>
+                    <p className="text-slate-500 dark:text-slate-400">
+                        {habits.length === 0
+                            ? "Ready to start a new journey?"
+                            : "Small steps lead to big changes."
+                        }
+                    </p>
                 </div>
 
                 {habits.length > 0 && (
@@ -94,7 +109,7 @@ export default function DashboardPage() {
                         onClick={handleOpenForm}
                         className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
                     >
-                        <span>+</span> New Habit
+                        <span className="text-xl">+</span> New Habit
                     </button>
                 )}
             </header>
