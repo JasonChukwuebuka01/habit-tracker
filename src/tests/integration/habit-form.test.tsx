@@ -1,15 +1,25 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
-import HabitForm from '@/components/habits/HabitForm';
-import { storage } from '@/lib/storage';
+import HabitForm from '../../components/habits/HabitForm';
+import { storage } from '../../lib/storage';
 
-vi.mock('@/lib/storage', () => ({
+// CRITICAL: The mock path MUST match the relative import path used above
+vi.mock('../../lib/storage', () => ({
     storage: {
         saveHabit: vi.fn(),
     },
 }));
 
+// Mock scrollTo to avoid errors in JSDOM
 window.scrollTo = vi.fn();
+
+// Polyfill crypto for Vitest environment
+if (!global.crypto) {
+    Object.defineProperty(global, 'crypto', {
+        value: { randomUUID: () => 'test-uuid-123' },
+    });
+}
 
 describe('HabitForm Requirements', () => {
     const mockOnClose = vi.fn();
@@ -28,8 +38,10 @@ describe('HabitForm Requirements', () => {
         const saveButton = screen.getByTestId('habit-save-button');
         fireEvent.click(saveButton);
 
-        // Check for the error message defined in your validateHabitName logic
+        // Verify the error message appears
         expect(screen.getByText(/name is required/i)).toBeDefined();
+
+        // storage.saveHabit is now correctly recognized as a spy
         expect(storage.saveHabit).not.toHaveBeenCalled();
     });
 
@@ -39,12 +51,16 @@ describe('HabitForm Requirements', () => {
         fireEvent.change(screen.getByTestId('habit-name-input'), { target: { value: 'New Habit' } });
         fireEvent.click(screen.getByTestId('habit-save-button'));
 
+        // Use objectContaining to handle the random UUID and ISO date
         expect(storage.saveHabit).toHaveBeenCalledWith(expect.objectContaining({
             name: 'New Habit',
             userId: userId,
+            description: '',
             completions: []
         }));
+
         expect(mockOnSuccess).toHaveBeenCalled();
+        expect(mockOnClose).toHaveBeenCalled();
     });
 
     it('edits an existing habit and preserves immutable fields', () => {
@@ -71,7 +87,7 @@ describe('HabitForm Requirements', () => {
         fireEvent.change(screen.getByTestId('habit-name-input'), { target: { value: 'Updated Name' } });
         fireEvent.click(screen.getByTestId('habit-save-button'));
 
-        // Verify name changed but ID, UserID, and CreatedAt remained identical
+        // Check that name changed while ID and CreatedAt stayed the same
         expect(storage.saveHabit).toHaveBeenCalledWith({
             id: 'fixed-id-123',
             userId: userId,

@@ -1,11 +1,12 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import LoginForm from '@/components/auth/LoginForm';
-import SignupForm from '@/components/auth/SignupForm';
-import { loginUser, registerUser } from '@/lib/auth';
+import LoginForm from '../../components/auth/LoginForm';
+import SignupForm from '../../components/auth/SignupForm';
+import { loginUser, registerUser } from '../../lib/auth';
 
-// 1. Mock the Auth Library
-vi.mock('@/lib/auth', () => ({
+// 1. FIX: Use the SAME relative path for the mock as the import
+vi.mock('../../lib/auth', () => ({
     loginUser: vi.fn(),
     registerUser: vi.fn(),
 }));
@@ -27,7 +28,8 @@ describe('Authentication Flow Requirements', () => {
      * REQUIREMENT: submits the signup form and creates a session
      */
     it('submits the signup form and creates a session', async () => {
-        vi.mocked(registerUser).mockReturnValue({ success: true });
+        // Use mockResolvedValue since auth functions are usually async/Promises
+        vi.mocked(registerUser).mockResolvedValue({ success: true });
 
         render(<SignupForm />);
 
@@ -45,9 +47,9 @@ describe('Authentication Flow Requirements', () => {
      * REQUIREMENT: shows an error for duplicate signup email
      */
     it('shows an error for duplicate signup email', async () => {
-        vi.mocked(registerUser).mockReturnValue({ 
-            success: false, 
-            error: 'Email already in use' 
+        vi.mocked(registerUser).mockResolvedValue({
+            success: false,
+            error: 'Email already in use'
         });
 
         render(<SignupForm />);
@@ -65,7 +67,7 @@ describe('Authentication Flow Requirements', () => {
      * REQUIREMENT: submits the login form and stores the active session
      */
     it('submits the login form and stores the active session', async () => {
-        vi.mocked(loginUser).mockReturnValue({ success: true });
+        vi.mocked(loginUser).mockResolvedValue({ success: true });
 
         render(<LoginForm />);
 
@@ -83,9 +85,9 @@ describe('Authentication Flow Requirements', () => {
      * REQUIREMENT: shows an error for invalid login credentials
      */
     it('shows an error for invalid login credentials', async () => {
-        vi.mocked(loginUser).mockReturnValue({ 
-            success: false, 
-            error: 'Invalid email or password' 
+        vi.mocked(loginUser).mockResolvedValue({
+            success: false,
+            error: 'Invalid email or password'
         });
 
         render(<LoginForm />);

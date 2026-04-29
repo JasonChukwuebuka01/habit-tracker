@@ -1,10 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+/** @vitest-environment jsdom */
+
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import HabitCard from '../../components/habits/HabitCard';
 import { Habit } from '../../types/habits';
+import { getHabitSlug } from '../../lib/slug';
+
 
 describe('HabitCard Component Requirements', () => {
-    // 1. Setup Mock Data
     const mockHabit: Habit = {
         id: 'habit-123',
         userId: 'user-999',
@@ -12,17 +15,19 @@ describe('HabitCard Component Requirements', () => {
         description: '10 minutes of mindfulness',
         frequency: 'daily',
         createdAt: new Date().toISOString(),
-        completions: [], // Start with no completions
+        completions: [],
     };
 
     const mockOnDelete = vi.fn();
     const mockOnEdit = vi.fn();
     const mockOnUpdate = vi.fn();
+    const slug = getHabitSlug(mockHabit.name);
 
     beforeEach(() => {
         vi.clearAllMocks();
-        cleanup();
     });
+
+    afterEach(cleanup);
 
     /**
      * REQUIREMENT: deletes a habit only after explicit confirmation
@@ -37,21 +42,18 @@ describe('HabitCard Component Requirements', () => {
             />
         );
 
-        // Click the initial delete (trash icon) trigger
+        // 1. Click the trash icon trigger (found inside DeleteHabitButton)
         const deleteTrigger = screen.getByLabelText(/delete habit/i);
         fireEvent.click(deleteTrigger);
 
-        // Verify the onDelete function HAS NOT been called yet
+        // 2. Verify onDelete HAS NOT been called yet (just the modal opened)
         expect(mockOnDelete).not.toHaveBeenCalled();
 
-        // Verify the modal is visible by finding the required test-id button
+        // 3. Find the confirmation button in the modal
         const confirmButton = screen.getByTestId('confirm-delete-button');
-        expect(confirmButton).toBeDefined();
-
-        // Click the explicit confirmation button
         fireEvent.click(confirmButton);
 
-        // Verify the deletion is now triggered with the correct ID
+        // 4. Verify the deletion is now triggered
         expect(mockOnDelete).toHaveBeenCalledWith('habit-123');
     });
 
@@ -68,18 +70,21 @@ describe('HabitCard Component Requirements', () => {
             />
         );
 
-        // Target the checkbox (which handles completion toggling)
-        const checkbox = screen.getByRole('checkbox');
+        // FIX: The component uses a button with a test-id, not a role="checkbox"
+        const completeButton = screen.getByTestId(`habit-complete-${slug}`);
 
-        // Simulate checking the habit as complete
-        fireEvent.click(checkbox);
+        // Simulate checking the habit
+        fireEvent.click(completeButton);
 
-        // Verify the update function is called to persist the state change
-        // This is what ultimately updates the streak display in the UI
+        // Verify onUpdate was called
         expect(mockOnUpdate).toHaveBeenCalledTimes(1);
 
-        // Check that the update includes a completion for today
-        const callArgs = mockOnUpdate.mock.calls[0][0];
-        expect(callArgs.completions.length).toBe(1);
+        // Check that the update includes the new completion
+        const updatedHabit = mockOnUpdate.mock.calls[0][0];
+        expect(updatedHabit.completions.length).toBe(1);
+
+        // Check that the date added matches today's date format (YYYY-MM-DD)
+        const today = new Date().toISOString().split('T')[0];
+        expect(updatedHabit.completions).toContain(today);
     });
 });

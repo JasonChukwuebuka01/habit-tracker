@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Habit } from '@/types/habits';
-import { toggleHabitCompletion } from '@/lib/habits';
-import { calculateCurrentStreak } from '@/lib/streaks';
-import { getHabitSlug } from '@/lib/slug';
+import { Habit } from '../../types/habits';
+import { toggleHabitCompletion } from '../../lib/habits';
+import { calculateCurrentStreak } from '../../lib/streaks';
+import { getHabitSlug } from '../../lib/slug';
 import { Check, Edit2, Trash2, Flame } from 'lucide-react';
 import DeleteHabitButton from './DeleteHabitButton';
 

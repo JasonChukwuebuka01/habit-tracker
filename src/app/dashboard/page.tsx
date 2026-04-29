@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { storage } from '@/lib/storage';
 import { Habit } from '@/types/habits';
 import HabitForm from '@/components/habits/HabitForm';
-import HabitList from '@/components/habits/HabitList'; // Imported HabitList
+import HabitList from '@/components/habits/HabitList'; 
 
 export default function DashboardPage() {
     const [habits, setHabits] = useState<Habit[]>([]);

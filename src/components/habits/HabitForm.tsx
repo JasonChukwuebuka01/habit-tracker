@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { storage } from '@/lib/storage';
-import { Habit } from '@/types/habits';
-import { validateHabitName } from '@/lib/validators';
+import { storage } from '../../lib/storage';
+import { Habit } from '../../types/habits';
+import { validateHabitName } from '../../lib/validators';
 
 interface HabitFormProps {
     isOpen: boolean;
