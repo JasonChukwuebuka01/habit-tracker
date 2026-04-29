@@ -13,24 +13,22 @@ export default function RootPage() {
   const router = useRouter();
 
 
-
   useEffect(() => {
+    // Immediate log to see if this even runs
+    console.log("RootPage Mounted");
+
     const timer = setTimeout(() => {
       const session = storage.getSession();
-
-
       if (session) {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       } else {
-        router.push('/login');
+        router.replace('/login');
       }
-    }, SPLASH_DURATION);
+    }, SPLASH_DURATION || 2000); // Fallback to 2s if constant is missing
 
     return () => clearTimeout(timer);
   }, [router]);
 
 
-
-  
   return <SplashScreen />;
 }

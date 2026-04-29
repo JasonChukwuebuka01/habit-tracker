@@ -107,6 +107,7 @@ export default function DashboardPage() {
                 {habits.length > 0 && (
                     <button
                         onClick={handleOpenForm}
+                        data-testid="open-habit-form"
                         className="hidden md:flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
                     >
                         <span className="text-xl">+</span> New Habit
@@ -123,6 +124,7 @@ export default function DashboardPage() {
                     <h2 className="text-xl font-bold text-slate-900 dark:text-white">No habits yet</h2>
                     <button
                         onClick={handleOpenForm}
+                        data-testid="open-habit-form"
                         className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg transition-all active:scale-95"
                     >
                         Create Your First Habit
